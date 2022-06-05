@@ -1,7 +1,7 @@
 ﻿#include <log>
 log.is_out_console := true
 log.is_out_file := true
-log.is_use_editor := false
+log.is_use_editor := true
 log.level := log.level_debug
 s1 := "100"
 s2 := 100

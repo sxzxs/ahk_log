@@ -6,7 +6,7 @@ logger.is_out_file := true
 ;logger.file := true
 
 ;需要输出到编辑器终端时
-logger.is_use_editor := false
+;logger.is_use_editor := false
 
 logger.level := logger.level_trace
 logger.debug("debug")
