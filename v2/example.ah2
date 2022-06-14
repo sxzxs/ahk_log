@@ -5,12 +5,20 @@ logger.is_out_file := true
 ;打印文件名字
 ;logger.file := true
 
-;需要输出到编辑器终端时
-;logger.is_use_editor := false
-
+;需要输出到编辑器终端时 is_use_editor := true
+logger.is_use_editor := false
 logger.level := logger.level_trace
+
 logger.debug("debug")
+logger.set_pattern(logger.default_patter)
 logger.trace("trace")
+logger.set_pattern("[%Y-%m-%d %H:%M:%S.%F] [thread %=7t] [%=8l] %^%v%$   (%ius)")
+logger.info("patter test")
+logger.set_pattern("[%=8l] %^%v%$   (%ius)")
+logger.info("patter test")
+logger.set_pattern("%^%v%$   (%ius)")
+logger.info("patter test")
+
 
 s1 := "100"
 s2 := 100

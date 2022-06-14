@@ -29,7 +29,8 @@ class logger
     static level_warn := 4
     static level_error := 5
     static level_critical := 6
-    static LOG4AHK_G_MY_DLL_USE_MAP := map("cpp2ahk.dll" , map("cpp2ahk", 0, "log_simple", 0, "log_simple_mt_color", 0, "set_console_transparency", 0))
+    static default_patter := "[%Y-%m-%d %H:%M:%S.%F] [thread %=7t] [%=8l] %^%v%$   (%ius)" ;https://github.com/gabime/spdlog/wiki/3.-Custom-formatting
+    static LOG4AHK_G_MY_DLL_USE_MAP := map("cpp2ahk.dll" , map("cpp2ahk", 0, "log_simple", 0, "log_simple_mt_color", 0, "set_console_transparency", 0, "log_set_format", 0))
     static log4ahk_load_all_dll_path()
     {
         SplitPath(A_LineFile,,&dir)
@@ -59,6 +60,14 @@ class logger
         }
         DllCall("SetConsoleTitle", "Str", A_ScriptName)
         dllcall("SetDllDirectory", "Str", A_ScriptDir)
+        this.set_pattern(this.default_patter)
+    }
+    ;https://github.com/gabime/spdlog/wiki/3.-Custom-formatting
+    ;[%Y-%m-%d %H:%M:%S.%F] [thread %=7t] [%=8l] %^%v%$   (%ius)
+    static set_pattern(pattern)
+    {
+        buf := this.strbuf(pattern,"utf-8")
+        DllCall(this.LOG4AHK_G_MY_DLL_USE_MAP["cpp2ahk.dll"]["log_set_format"], "ptr", buf)
     }
     static attach_cmder(condum_path)
     {
