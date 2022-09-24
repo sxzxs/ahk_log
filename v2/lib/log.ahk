@@ -89,6 +89,112 @@ class logger
     {
         ;DllCall("FreeConsole")
     }
+
+    static GetStdoutObject() 
+    {
+        x := FileOpen(DllCall("GetStdHandle", "int", -11, "ptr"), "h `n")
+        return x
+    }
+    static GetStdinObject() 
+    {
+        x := FileOpen(DllCall("GetStdHandle", "int", -10, "ptr"), "h `n")
+        return x
+    }
+    ;刷新
+    static FlushInput() 
+    {
+        x:=DllCall("FlushConsoleInputBuffer", 'uint', this.stdin.Handle)
+        return x
+    }
+    ;获取值
+    static Gets(&str :="") 
+    {
+        if(this.is_dll_load == false)
+        {
+            this.log4ahk_load_all_dll_path()
+        }
+        this.Stdin := this.getStdinObject()
+        this.flushInput()
+        BufferSize:=8192 ;65536 bytes is the maximum
+        charsRead:=0
+        Ptr := (A_PtrSize) ? "uptr" : "uint"
+        str := Buffer(BufferSize, 0)
+        e:=DllCall("ReadConsoleW"
+                ,Ptr,this.stdin.Handle
+                ,Ptr, str
+                ,"UInt",BufferSize
+                ,Ptr "*",&charsRead
+                ,Ptr,0
+                ,'UInt')
+        
+        if (e) and (!charsRead)
+            return ""
+        msg := "" 
+        Loop(charsRead)
+            msg .= Chr(NumGet(str, (A_Index-1) * (2), "ushort"))
+        msg := StrSplit(msg,'`r`n')
+        str := msg[1]
+        this.flushInput()
+        return str
+    }
+    ;格式化输出
+	static Putsf(msg, vargs*) 
+    {
+		for each, varg in vargs
+            msg := StrReplace(msg, '%s', varg)
+		return this.puts(msg)
+	}
+    ;带回车的输出
+    static Puts(str*) 
+    {
+        if(this.is_dll_load == false)
+        {
+            this.log4ahk_load_all_dll_path()
+        }
+        this.Stdout := this.getStdoutObject()
+        for k,v in str
+        {
+            string .= this.log4ahk_to_str(v)
+        }
+        r:=this.print(string . "`n")
+        this.Stdout.Read(0)
+        return r
+    }
+    ;格式化不带回车输出
+	Printf(msg, vargs*) 
+    {
+		for each, varg in vargs
+            msg := StrSplit(msg, '%s', varg)
+		return this.print(msg)
+	}
+    ;不带回车的输出
+    static Print(str*)
+    {
+        ;local
+        if(this.is_dll_load == false)
+        {
+            this.log4ahk_load_all_dll_path()
+        }
+        this.Stdout := this.getStdoutObject()
+
+        for k,v in str
+        {
+            string .= this.log4ahk_to_str(v)
+        }
+        if (!StrLen(string))
+            return 1
+        Written := 0
+        e:=DllCall("WriteConsoleW"
+                , "UPtr", this.Stdout.Handle
+                , "Str", string
+                , "UInt", strlen(string)
+                , "UInt*", &Written
+                , "uint", 0)
+        this.Stdout.Read(0)
+        return e
+    }
+
+
     static log_out(para*)
     {
         if(this.is_dll_load == false)

@@ -14,11 +14,20 @@ log.warn(s1, s2, s3, s4)
 log.err(s1, s2, s3, s4)
 log.critical(s1, s2, s3, s4)
 
-log.set_pattern("[%=8l] %^%v%$   (%ius)")
+log.set_pattern("[%=8l] %^%v%$")
+log.func := false
+log.file := false
 loop,% 100
 {
-    log.info("ok")
+    log.info(A_Index)
 }
+log.puts("Hello World!")
+log.puts("Hello World!")
+log.putsf("`nWelcome %s!", (log.gets(Name)=="") ? "User" : Name)
+;log.FlushInput()
+log.print("jjj")
+log.print("jjj")
+msgbox, jj
 
 
 return

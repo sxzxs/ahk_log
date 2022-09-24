@@ -19,7 +19,6 @@ logger.info("patter test")
 logger.set_pattern("%^%v%$   (%ius)")
 logger.info("patter test")
 
-
 s1 := "100"
 s2 := 100
 s3 := "autohotkey"
@@ -35,5 +34,12 @@ logger.critical(s1, s2, s3, s4)
 loop(100)
     logger.info(A_index)
 logger.info(Log('10'))
+logger.Print("test")
 
+logger.puts("Hello World!")
+logger.puts("Hello World!")
+name := 0
+logger.putsf("`nWelcome %s!", (logger.gets(&Name)=="") ? "User" : Name)
+logger.print("jjj")
+logger.print("jjj")
 #include <log>

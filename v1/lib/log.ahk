@@ -182,11 +182,13 @@ class log
         x := FileOpen(DllCall("GetStdHandle", "int", -10, "ptr"), "h `n")
         return x
     }
+    ;刷新
     FlushInput() 
     {
         x:=DllCall("FlushConsoleInputBuffer", uint, this.stdin.__Handle)
         return x
     }
+    ;暂停
 	Pause(show=1) 
     {
         local
@@ -196,6 +198,7 @@ class log
 		runwait %ComSpec% /c pause.exe %n%,,UseErrorLevel
 		return 1
 	}
+    ;获取值
     Gets(ByRef str="") 
     {
         if(this.is_dll_load == false)
@@ -226,6 +229,7 @@ class log
         this.flushInput()
         return str
     }
+    ;格式化输出
 	Putsf(msg, vargs*) 
     {
         local
@@ -233,6 +237,7 @@ class log
 			StringReplace,msg,msg,`%s, % varg ;msg:=RegExReplace(msg,"i)`%.",varg)
 		return this.puts(msg)
 	}
+    ;带回车的输出
     Puts(str*) 
     {
         local
@@ -249,6 +254,7 @@ class log
         this.Stdout.Read(0)
         return r
     }
+    ;格式化不带回车输出
 	Printf(msg, vargs*) 
     {
         local
@@ -256,6 +262,7 @@ class log
 			StringReplace,msg,msg,`%s, % varg ;msg:=RegExReplace(msg,"i)`%.",varg)
 		return this.print(msg)
 	}
+    ;不带回车的输出
     Print(str*)
     {
         ;local
